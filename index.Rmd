@@ -1,0 +1,8 @@
+---
+title: "Introduction to Mixed Models in R"
+author: "Michael Agronah"
+date: "2023-06-03"
+output: html_document
+---
+[Syntrax in R Mixed](Mixed_Models.html)
+ 

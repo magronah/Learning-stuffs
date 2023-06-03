@@ -1,0 +1,39 @@
+
+# Synthax in R 
+| Syntax      | Meaning |  Further explanation | 
+| :---        |    :----:   | :----: | 
+| ``(f|g)``   | `f` is the random variable and `g` is the group variable    | each `f` has `g` levels | 
+| ``(1|g)``      | Random group intercept       |  | 
+| Paragraph   | Text        |  | 
+ 
+# Example: 
+```{r}
+#Load package
+library(glmmTMB)
+# Simulate data to illustrate 
+n = 10
+x <- rnorm(n); y <- x + rnorm(n)
+g= factor(1:n)
+data = data.frame(x,y,g)
+
+# Fit model
+glmmTMB(y ~ x, data=data) 
+# this model has fixed effects only: intercept and the slopes are estimated
+# we could have been fit this model easily with lm function in R 
+
+#Now lets add on some random effect terms
+glmmTMB(y ~ x + (1|g), data=data) 
+# each group level has its own intercept 
+# here we estimate the intercept and slope of the fixed effect term and 
+# intercept for the group levels 
+# in addition, a correlation is estimated for the random effect term
+
+## Add 
+glmmTMB(y ~ x + (x|g), data=data) # each group level has its own intercept and slope.
+
+
+```
+
+
+
+

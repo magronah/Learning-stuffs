@@ -9,11 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Michael Agronah" />
 
-<meta name="date" content="2023-06-03" />
 
-<title>Introduction to Mixed Models in R</title>
+<title>Mixed_Models.knit</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,14 +348,131 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Introduction to Mixed Models in R</h1>
-<h4 class="author">Michael Agronah</h4>
-<h4 class="date">2023-06-03</h4>
 
 </div>
 
 
-<p><a href="Mixed_Models.html">Syntrax in R Mixed</a></p>
+<div id="synthax-in-r" class="section level1">
+<h1>Synthax in R</h1>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="37%" />
+<col width="37%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Syntax</th>
+<th align="center">Meaning</th>
+<th align="center">Further explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>(f|g)</code></td>
+<td align="center"><code>f</code> is the random variable and
+<code>g</code> is the group variable</td>
+<td align="center">each <code>f</code> has <code>g</code> levels</td>
+</tr>
+<tr class="even">
+<td align="left"><code>(1|g)</code></td>
+<td align="center">Random group intercept</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="left">Paragraph</td>
+<td align="center">Text</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="example" class="section level1">
+<h1>Example:</h1>
+<pre class="r"><code>#Load package
+library(glmmTMB)
+# Simulate data to illustrate 
+n = 10
+x &lt;- rnorm(n); y &lt;- x + rnorm(n)
+g= factor(1:n)
+data = data.frame(x,y,g)
+
+# Fit model
+glmmTMB(y ~ x, data=data) </code></pre>
+<pre><code>## Formula:          y ~ x
+## Data: data
+##       AIC       BIC    logLik  df.resid 
+##  29.38232  30.29007 -11.69116         7 
+## 
+## Number of obs: 10
+## 
+## Dispersion estimate for gaussian family (sigma^2): 0.607 
+## 
+## Fixed Effects:
+## 
+## Conditional model:
+## (Intercept)            x  
+##     0.04453      1.36451</code></pre>
+<pre class="r"><code># this model has fixed effects only: intercept and the slopes are estimated
+# we could have been fit this model easily with lm function in R 
+
+#Now lets add on some random effect terms
+glmmTMB(y ~ x + (1|g), data=data) </code></pre>
+<pre><code>## Formula:          y ~ x + (1 | g)
+## Data: data
+##       AIC       BIC    logLik  df.resid 
+##  31.38232  32.59266 -11.69116         6 
+## Random-effects (co)variances:
+## 
+## Conditional model:
+##  Groups   Name        Std.Dev.
+##  g        (Intercept) 0.3514  
+##  Residual             0.6952  
+## 
+## Number of obs: 10 / Conditional model: g, 10
+## 
+## Dispersion estimate for gaussian family (sigma^2): 0.483 
+## 
+## Fixed Effects:
+## 
+## Conditional model:
+## (Intercept)            x  
+##     0.04453      1.36451</code></pre>
+<pre class="r"><code># each group level has its own intercept 
+# here we estimate the intercept and slope of the fixed effect term and 
+# intercept for the group levels 
+# in addition, a correlation is estimated for the random effect term
+
+## Add 
+glmmTMB(y ~ x + (x|g), data=data) # each group level has its own intercept and slope.</code></pre>
+<pre><code>## Warning in (function (start, objective, gradient = NULL, hessian = NULL, :
+## NA/NaN function evaluation</code></pre>
+<pre><code>## Warning in fitTMB(TMBStruc): Model convergence problem; non-positive-definite
+## Hessian matrix. See vignette(&#39;troubleshooting&#39;)</code></pre>
+<pre><code>## Warning in fitTMB(TMBStruc): Model convergence problem; false convergence (8).
+## See vignette(&#39;troubleshooting&#39;)</code></pre>
+<pre><code>## Formula:          y ~ x + (x | g)
+## Data: data
+##      AIC      BIC   logLik df.resid 
+##       NA       NA       NA        4 
+## Random-effects (co)variances:
+## 
+## Conditional model:
+##  Groups   Name        Std.Dev.  Corr 
+##  g        (Intercept) 9.558e-01      
+##           x           5.565e-01 1.00 
+##  Residual             7.580e-08      
+## 
+## Number of obs: 10 / Conditional model: g, 10
+## 
+## Dispersion estimate for gaussian family (sigma^2): 5.75e-15 
+## 
+## Fixed Effects:
+## 
+## Conditional model:
+## (Intercept)            x  
+##     -0.0214       1.2469</code></pre>
+</div>
 
 
 
