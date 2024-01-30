@@ -4,7 +4,7 @@
 | :---        |    :----:   | :----: | 
 | ``(f|g)``   | `f` is the random variable and `g` is the group variable    | each `f` has `g` levels | 
 | ``(1|g)``      | Random group intercept       |  | 
-| Paragraph   | Text        |  | 
+|  ``x + (1|g)``    | fixed effect estimates slopes and intercepts and then         |  | 
  
 # Example: 
 ```{r}
@@ -15,25 +15,34 @@ n = 10
 x <- rnorm(n); y <- x + rnorm(n)
 g= factor(1:n)
 data = data.frame(x,y,g)
+```
 
-# Fit model
-glmmTMB(y ~ x, data=data) 
-# this model has fixed effects only: intercept and the slopes are estimated
-# we could have been fit this model easily with lm function in R 
+# Fit linear model with `lm` function
+```{r}
+lm(y ~ x, data=data) 
 
-#Now lets add on some random effect terms
-glmmTMB(y ~ x + (1|g), data=data) 
-# each group level has its own intercept 
-# here we estimate the intercept and slope of the fixed effect term and 
-# intercept for the group levels 
-# in addition, a correlation is estimated for the random effect term
-
-## Add 
-glmmTMB(y ~ x + (x|g), data=data) # each group level has its own intercept and slope.
-
-
+#this model has fixed effects only: intercept and the slopes are estimated
+#we could have been fit this model easily with lm function in R 
 ```
 
 
+# Now lets add on some random effect terms
+```{r}
+glmmTMB(y ~ x + (1|g), data=data) 
+#each group level has its own intercept 
+#here we estimate the intercept and slope of the fixed effect term and 
+#intercept for the group levels 
+#' in addition, a correlation is estimated for the random effect term. Here 
+#' very trivial, the correlation between the random slope and itself which is just one
+```
+
+## Add some more random effect terms
+```{r}
+glmmTMB(y ~ x + (x|g), data=data) 
+# each group level has its own intercept and slope.
+
+# Random effect term has its intercpt and slope and then the correlation matrix shouinf the coerrelation 
+# between the random effect parameters
+```
 
 

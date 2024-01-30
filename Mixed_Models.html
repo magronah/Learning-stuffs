@@ -380,8 +380,9 @@ display: none;
 <td align="center"></td>
 </tr>
 <tr class="odd">
-<td align="left">Paragraph</td>
-<td align="center">Text</td>
+<td align="left"><code>x + (1|g)</code></td>
+<td align="center">fixed effect estimates slopes and intercepts and
+then</td>
 <td align="center"></td>
 </tr>
 </tbody>
@@ -395,58 +396,52 @@ library(glmmTMB)
 n = 10
 x &lt;- rnorm(n); y &lt;- x + rnorm(n)
 g= factor(1:n)
-data = data.frame(x,y,g)
-
-# Fit model
-glmmTMB(y ~ x, data=data) </code></pre>
-<pre><code>## Formula:          y ~ x
-## Data: data
-##       AIC       BIC    logLik  df.resid 
-##  29.38232  30.29007 -11.69116         7 
+data = data.frame(x,y,g)</code></pre>
+</div>
+<div id="fit-linear-model-with-lm-function" class="section level1">
+<h1>Fit linear model with <code>lm</code> function</h1>
+<pre class="r"><code>lm(y ~ x, data=data) </code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x, data = data)
 ## 
-## Number of obs: 10
-## 
-## Dispersion estimate for gaussian family (sigma^2): 0.607 
-## 
-## Fixed Effects:
-## 
-## Conditional model:
+## Coefficients:
 ## (Intercept)            x  
-##     0.04453      1.36451</code></pre>
-<pre class="r"><code># this model has fixed effects only: intercept and the slopes are estimated
-# we could have been fit this model easily with lm function in R 
-
-#Now lets add on some random effect terms
-glmmTMB(y ~ x + (1|g), data=data) </code></pre>
+##      -0.489        1.277</code></pre>
+<pre class="r"><code>#this model has fixed effects only: intercept and the slopes are estimated
+#we could have been fit this model easily with lm function in R </code></pre>
+</div>
+<div id="now-lets-add-on-some-random-effect-terms" class="section level1">
+<h1>Now lets add on some random effect terms</h1>
+<pre class="r"><code>glmmTMB(y ~ x + (1|g), data=data) </code></pre>
 <pre><code>## Formula:          y ~ x + (1 | g)
 ## Data: data
 ##       AIC       BIC    logLik  df.resid 
-##  31.38232  32.59266 -11.69116         6 
+##  37.18685  38.39719 -14.59342         6 
 ## Random-effects (co)variances:
 ## 
 ## Conditional model:
 ##  Groups   Name        Std.Dev.
-##  g        (Intercept) 0.3514  
-##  Residual             0.6952  
+##  g        (Intercept) 0.5371  
+##  Residual             0.8920  
 ## 
 ## Number of obs: 10 / Conditional model: g, 10
 ## 
-## Dispersion estimate for gaussian family (sigma^2): 0.483 
+## Dispersion estimate for gaussian family (sigma^2): 0.796 
 ## 
 ## Fixed Effects:
 ## 
 ## Conditional model:
 ## (Intercept)            x  
-##     0.04453      1.36451</code></pre>
-<pre class="r"><code># each group level has its own intercept 
-# here we estimate the intercept and slope of the fixed effect term and 
-# intercept for the group levels 
-# in addition, a correlation is estimated for the random effect term
-
-## Add 
-glmmTMB(y ~ x + (x|g), data=data) # each group level has its own intercept and slope.</code></pre>
-<pre><code>## Warning in (function (start, objective, gradient = NULL, hessian = NULL, :
-## NA/NaN function evaluation</code></pre>
+##      -0.489        1.277</code></pre>
+<pre class="r"><code>#each group level has its own intercept 
+#here we estimate the intercept and slope of the fixed effect term and 
+#intercept for the group levels 
+#&#39; in addition, a correlation is estimated for the random effect term. Here 
+#&#39; very trivial, the correlation between the random slope and itself which is just one</code></pre>
+<div id="add-some-more-random-effect-terms" class="section level2">
+<h2>Add some more random effect terms</h2>
+<pre class="r"><code>glmmTMB(y ~ x + (x|g), data=data) </code></pre>
 <pre><code>## Warning in fitTMB(TMBStruc): Model convergence problem; non-positive-definite
 ## Hessian matrix. See vignette(&#39;troubleshooting&#39;)</code></pre>
 <pre><code>## Warning in fitTMB(TMBStruc): Model convergence problem; false convergence (8).
@@ -458,20 +453,25 @@ glmmTMB(y ~ x + (x|g), data=data) # each group level has its own intercept and s
 ## Random-effects (co)variances:
 ## 
 ## Conditional model:
-##  Groups   Name        Std.Dev.  Corr 
-##  g        (Intercept) 9.558e-01      
-##           x           5.565e-01 1.00 
-##  Residual             7.580e-08      
+##  Groups   Name        Std.Dev.  Corr  
+##  g        (Intercept) 9.776e-01       
+##           x           3.191e-01 -1.00 
+##  Residual             2.389e-08       
 ## 
 ## Number of obs: 10 / Conditional model: g, 10
 ## 
-## Dispersion estimate for gaussian family (sigma^2): 5.75e-15 
+## Dispersion estimate for gaussian family (sigma^2): 5.71e-16 
 ## 
 ## Fixed Effects:
 ## 
 ## Conditional model:
 ## (Intercept)            x  
-##     -0.0214       1.2469</code></pre>
+##     -0.5061       1.2375</code></pre>
+<pre class="r"><code># each group level has its own intercept and slope.
+
+# Random effect term has its intercpt and slope and then the correlation matrix shouinf the coerrelation 
+# between the random effect parameters</code></pre>
+</div>
 </div>
 
 
